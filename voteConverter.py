@@ -24,6 +24,7 @@ def node_to_nwiki(node):
 xmlTree = ET.parse('BspFragen.xml') #for testing
 root = xmlTree.getroot()
 
+w = open('wikitext.txt', 'w')
 assert root.tag == 'ArrayOfQuestion'
 for question in root:
     assert question.tag == 'Question'
@@ -31,4 +32,5 @@ for question in root:
         nwiki_snippet = node_to_nwiki(node)
 
         if nwiki_snippet is not None:
-            print(nwiki_snippet)
+            w.write(nwiki_snippet + '\n')
+w.close()
