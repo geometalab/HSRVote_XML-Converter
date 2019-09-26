@@ -11,28 +11,28 @@ for question in root:
     for node in question:
         if node.text is not None:
             if node.tag == 'QuestionText':
-                print('=' + node.text + '=')
+                print(f'={node.text}=')
             elif node.tag == 'Answer1':
-                print('==A: ' + node.text + '==')
+                print(f'==A: {node.text}==')
             elif node.tag == 'Answer2':
-                print('==B: ' + node.text + '==')
+                print(f'==B: {node.text}==')
             elif node.tag == 'Answer3':
-                print('==C: ' + node.text + '==')
+                print(f'==C: {node.text}==')
             elif node.tag == 'Answer4':
-                print('==D: ' + node.text + '==')
+                print(f'==D: {node.text}==')
             elif node.tag == 'PictureQuestionText':
-                print('[[image:' + node.text + '|' + node.text + ']]')
+                print(f'[[image:{node.text}|{node.text}]]')
             elif node.tag == 'PictureAnswer1':
                 print('==A:==')
-                print('[[image:' + node.text + '|' + node.text + ']]')
+                print(f'[[image:{node.text}|{node.text}]]')
             elif node.tag == 'PictureAnswer2':
                 print('==B:==')
-                print('[[image:' + node.text + '|' + node.text + ']]')
+                print(f'[[image:{node.text}|{node.text}]]')
             elif node.tag == 'PictureAnswer3':
                 print('==C:==')
-                print('[[image:' + node.text + '|' + node.text + ']]')
+                print(f'[[image:{node.text}|{node.text}]]')
             elif  node.tag == 'PictureAnswer4':
                 print('==D:==')
-                print('[[image:' + node.text + '|' + node.text + ']]')
+                print(f'[[image:{node.text}|{node.text}]]')
             elif node.tag == 'Solution':
-                print("'''Solution: " + node.text + "'''")
+                print(f"'''Solution: {node.text}'''")
