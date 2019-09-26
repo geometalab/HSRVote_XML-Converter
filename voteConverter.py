@@ -1,37 +1,38 @@
-from xml.dom.minidom import parse, Node
+import xml.etree.ElementTree as ET
 import sys
 
-#xmlTree = parse(sys.argv[1])
-xmlTree = parse('BspFragen.xml') #for testing
+#xmlTree = ET.parse(sys.argv[1])
+xmlTree = ET.parse('BspFragen.xml') #for testing
+root = xmlTree.getroot()
 
-
-for question in xmlTree.getElementsByTagName('Question'):
-    for node in question.childNodes:
-        for node2 in node.childNodes:
-            temp = str(node)
-            if ' QuestionText' in temp:
-                print('=' + node2.data + '=')
-            elif ' Answer1' in temp:
-                print('==A: ' + node2.data + '==')
-            elif ' Answer2' in temp:
-                print('==B: ' + node2.data + '==')
-            elif ' Answer3' in temp:
-                print('==C: ' + node2.data + '==')
-            elif ' Answer4' in temp:
-                print('==D: ' + node2.data + '==')
-            elif ' PictureQuestionText' in temp:
-                print('[[image:' + node2.data + '|' + node2.data + ']]')
-            elif ' PictureAnswer1' in temp:
+assert root.tag == 'ArrayOfQuestion'
+for question in root:
+    assert question.tag == 'Question'
+    for node in question:
+        if node.text is not None:
+            if node.tag == 'QuestionText':
+                print('=' + node.text + '=')
+            elif node.tag == 'Answer1':
+                print('==A: ' + node.text + '==')
+            elif node.tag == 'Answer2':
+                print('==B: ' + node.text + '==')
+            elif node.tag == 'Answer3':
+                print('==C: ' + node.text + '==')
+            elif node.tag == 'Answer4':
+                print('==D: ' + node.text + '==')
+            elif node.tag == 'PictureQuestionText':
+                print('[[image:' + node.text + '|' + node.text + ']]')
+            elif node.tag == 'PictureAnswer1':
                 print('==A:==')
-                print('[[image:' + node2.data + '|' + node2.data + ']]')
-            elif ' PictureAnswer2' in temp:
+                print('[[image:' + node.text + '|' + node.text + ']]')
+            elif node.tag == 'PictureAnswer2':
                 print('==B:==')
-                print('[[image:' + node2.data + '|' + node2.data + ']]')
-            elif ' PictureAnswer3' in temp:
+                print('[[image:' + node.text + '|' + node.text + ']]')
+            elif node.tag == 'PictureAnswer3':
                 print('==C:==')
-                print('[[image:' + node2.data + '|' + node2.data + ']]')
-            elif ' PictureAnswer4' in temp:
+                print('[[image:' + node.text + '|' + node.text + ']]')
+            elif  node.tag == 'PictureAnswer4':
                 print('==D:==')
-                print('[[image:' + node2.data + '|' + node2.data + ']]')
-            elif ' Solution' in temp:
-                print("'''Solution: " + node2.data + "'''")
+                print('[[image:' + node.text + '|' + node.text + ']]')
+            elif node.tag == 'Solution':
+                print("'''Solution: " + node.text + "'''")
