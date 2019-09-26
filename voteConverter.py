@@ -3,28 +3,24 @@ import sys
 
 def node_to_nwiki(node):
     if node.text is not None:
-        if node.tag == 'QuestionText':
-            print(f'={node.text}=')
-        elif node.tag == 'Answer1':
-            print(f'==A: {node.text}==')
-        elif node.tag == 'Answer2':
-            print(f'==B: {node.text}==')
-        elif node.tag == 'Answer3':
-            print(f'==C: {node.text}==')
-        elif node.tag == 'Answer4':
-            print(f'==D: {node.text}==')
-        elif node.tag == 'PictureQuestionText':
-            print(f'[[image:{node.text}|{node.text}]]')
-        elif node.tag == 'PictureAnswer1':
-            print(f'==A:==\n[[image:{node.text}|{node.text}]]')
-        elif node.tag == 'PictureAnswer2':
-            print(f'==B:==\n[[image:{node.text}|{node.text}]]')
-        elif node.tag == 'PictureAnswer3':
-            print(f'==C:==\n[[image:{node.text}|{node.text}]]')
-        elif  node.tag == 'PictureAnswer4':
-            print(f'==D:==\n[[image:{node.text}|{node.text}]]')
-        elif node.tag == 'Solution':
-            print(f"'''Solution: {node.text}'''")
+        nwiki_snippets = {
+            'QuestionText': f'={node.text}=',
+            'Answer1': f'==A: {node.text}==',
+            'Answer2': f'==B: {node.text}==',
+            'Answer3': f'==C: {node.text}==',
+            'Answer4': f'==D: {node.text}==',
+            'PictureQuestionText': f'[[image:{node.text}|{node.text}]]',
+            'PictureAnswer1': f'==A:==\n[[image:{node.text}|{node.text}]]',
+            'PictureAnswer2': f'==B:==\n[[image:{node.text}|{node.text}]]',
+            'PictureAnswer3': f'==C:==\n[[image:{node.text}|{node.text}]]',
+            'PictureAnswer4': f'==D:==\n[[image:{node.text}|{node.text}]]',
+            'Solution': f"'''Solution: {node.text}'''"
+            }
+        node_text = nwiki_snippets.get(node.tag)
+        if node_text is not None:
+            print(node_text)
+
+        
 
 #xmlTree = ET.parse(sys.argv[1])
 xmlTree = ET.parse('BspFragen.xml') #for testing
