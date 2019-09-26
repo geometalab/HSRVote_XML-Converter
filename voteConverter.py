@@ -16,9 +16,7 @@ def node_to_nwiki(node):
             'PictureAnswer4': f'==D:==\n[[image:{node.text}|{node.text}]]',
             'Solution': f"'''Solution: {node.text}'''"
             }
-        node_text = nwiki_snippets.get(node.tag)
-        if node_text is not None:
-            print(node_text)
+        return nwiki_snippets.get(node.tag)
 
         
 
@@ -30,4 +28,7 @@ assert root.tag == 'ArrayOfQuestion'
 for question in root:
     assert question.tag == 'Question'
     for node in question:
-        node_to_nwiki(node)
+        nwiki_snippet = node_to_nwiki(node)
+
+        if nwiki_snippet is not None:
+            print(nwiki_snippet)
