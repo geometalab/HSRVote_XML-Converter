@@ -1,22 +1,25 @@
 import xml.etree.ElementTree as ET
 import sys
 
+nwiki_snippets = {
+    'QuestionText': '={node_text}=',
+    'Answer1': '==A: {node_text}==',
+    'Answer2': '==B: {node_text}==',
+    'Answer3': '==C: {node_text}==',
+    'Answer4': '==D: {node_text}==',
+    'PictureQuestionText': '[[image:{node_text}|{node_text}]]',
+    'PictureAnswer1': '==A:==\n[[image:{node_text}|{node_text}]]',
+    'PictureAnswer2': '==B:==\n[[image:{node_text}|{node_text}]]',
+    'PictureAnswer3': '==C:==\n[[image:{node_text}|{node_text}]]',
+    'PictureAnswer4': '==D:==\n[[image:{node_text}|{node_text}]]',
+    'Solution': "'''Solution: {node_text}'''"
+    }
+
 def node_to_nwiki(node):
     if node.text is not None:
-        nwiki_snippets = {
-            'QuestionText': f'={node.text}=',
-            'Answer1': f'==A: {node.text}==',
-            'Answer2': f'==B: {node.text}==',
-            'Answer3': f'==C: {node.text}==',
-            'Answer4': f'==D: {node.text}==',
-            'PictureQuestionText': f'[[image:{node.text}|{node.text}]]',
-            'PictureAnswer1': f'==A:==\n[[image:{node.text}|{node.text}]]',
-            'PictureAnswer2': f'==B:==\n[[image:{node.text}|{node.text}]]',
-            'PictureAnswer3': f'==C:==\n[[image:{node.text}|{node.text}]]',
-            'PictureAnswer4': f'==D:==\n[[image:{node.text}|{node.text}]]',
-            'Solution': f"'''Solution: {node.text}'''"
-            }
-        return nwiki_snippets.get(node.tag)
+        nwiki_snippet = nwiki_snippets.get(node.tag)
+        if nwiki_snippet is not None:
+            return nwiki_snippet.format(node_text=node.text)
 
         
 
