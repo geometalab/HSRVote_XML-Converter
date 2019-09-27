@@ -23,8 +23,7 @@ def node_to_nwiki(node):
 
         
 
-#xmlTree = ET.parse(sys.argv[1])
-xmlTree = ET.parse('BspFragen.xml') #for testing
+xmlTree = ET.parse(sys.argv[1])
 root = xmlTree.getroot()
 
 with open('wikitext.txt', 'w') as w:
