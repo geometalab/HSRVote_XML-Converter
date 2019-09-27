@@ -1,4 +1,4 @@
-# Wiki-Converter for XML-Formatted HSRVote-Questions
+# HSRVote_XML-Converter
 Creates a file filled with nwiki-formatted data converted from a xml-file
 
 ## How to use the script:
