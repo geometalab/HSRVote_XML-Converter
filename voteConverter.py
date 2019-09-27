@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import sys
 
+# How the text of certain nodes should be formatted
 nwiki_snippets = {
     'QuestionText': '={node_text}=',
     'Answer1': '==A: {node_text}==',
@@ -21,11 +22,11 @@ def node_to_nwiki(node):
         if nwiki_snippet is not None:
             return nwiki_snippet.format(node_text=node.text)
 
-        
-
+# Parses a xml-file with the given name (first argument)
 xmlTree = ET.parse(sys.argv[1])
 root = xmlTree.getroot()
 
+# Creates a file containing nwiki-formatted data
 with open('wikitext.txt', 'w') as w:
     assert root.tag == 'ArrayOfQuestion'
     for question in root:
