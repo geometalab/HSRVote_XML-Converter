@@ -24,10 +24,11 @@ def node_to_nwiki(node):
 
 # Parses a xml-file with the given name (first argument)
 xmlTree = ET.parse(sys.argv[1])
+file_name = sys.argv[1].split('.')[0] + '.txt'
 root = xmlTree.getroot()
 
 # Creates a file containing nwiki-formatted data
-with open('wikitext.txt', 'w') as w:
+with open(file_name, 'w') as w:
     assert root.tag == 'ArrayOfQuestion'
     for question in root:
         assert question.tag == 'Question'
