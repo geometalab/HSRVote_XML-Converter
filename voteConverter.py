@@ -4,15 +4,15 @@ import sys
 # How the text of certain nodes should be formatted
 nwiki_snippets = {
     'QuestionText': '={node_text}=',
-    'Answer1': '==A: {node_text}==',
-    'Answer2': '==B: {node_text}==',
-    'Answer3': '==C: {node_text}==',
-    'Answer4': '==D: {node_text}==',
+    'Answer1': '==1: {node_text}==',
+    'Answer2': '==2: {node_text}==',
+    'Answer3': '==3: {node_text}==',
+    'Answer4': '==4: {node_text}==',
     'PictureQuestionText': '[[image:{node_text}|{node_text}]]',
-    'PictureAnswer1': '==A:==\n[[image:{node_text}|{node_text}]]',
-    'PictureAnswer2': '==B:==\n[[image:{node_text}|{node_text}]]',
-    'PictureAnswer3': '==C:==\n[[image:{node_text}|{node_text}]]',
-    'PictureAnswer4': '==D:==\n[[image:{node_text}|{node_text}]]',
+    'PictureAnswer1': '==1:==\n[[image:{node_text}|{node_text}]]',
+    'PictureAnswer2': '==2:==\n[[image:{node_text}|{node_text}]]',
+    'PictureAnswer3': '==3:==\n[[image:{node_text}|{node_text}]]',
+    'PictureAnswer4': '==4:==\n[[image:{node_text}|{node_text}]]',
     'Solution': "'''Solution: {node_text}'''"
     }
 
