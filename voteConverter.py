@@ -22,9 +22,10 @@ def node_to_nwiki(node):
         if nwiki_snippet is not None:
             return nwiki_snippet.format(node_text=node.text)
 
-# Parses a xml-file with the given name (first argument)
-xmlTree = ET.parse(sys.argv[1])
-file_name = sys.argv[1].split('.')[0] + '.txt'
+# Parses a xml-file with the given name
+xml_name = input('The name of your xml-file: ')
+xmlTree = ET.parse(xml_name)
+file_name = xml_name.split('.')[0] + '.txt'
 root = xmlTree.getroot()
 
 # Creates a file containing nwiki-formatted data
