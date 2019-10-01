@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 import sys, getopt
+import os.path
 
 # How the text of certain nodes should be formatted
 nwiki_snippets = {
@@ -17,14 +18,40 @@ nwiki_snippets = {
     }
 
 def show_options():
-    print('o')
+    print('''Converts xml-files to nwiki-files
+
+python voteConverter.py input [output] [-o | --overwrite] for converting
+python voteConverter.py [-? | --help] for help
+
+  input\t\t\tSpecifies the xml-file to convert.
+  output\t\tSpecifies the name of the nwiki-output-file.
+  -o, --overwrite\tAllows a nwiki-file to get overwritten.''')
 
 def show_help():
-    print('h')
+    print('''How to use voteConverter.py:
 
-def convert(xml_name, file_name, allow_overwrite):
+  python voteConverter.py example.xml
+  \t-> Read the file "example.xml" and create "example.nwiki"
+
+  python voteConverter.py example.xml different.nwiki
+  \t-> Read the file "example.xml" and create "different.nwiki"
+
+  python voteConverter.py example.xml -o
+  \t-> Read the file "example.xml" and overwrite already existing "example.nwiki"
+  
+  python voteConverter.py example.xml different.nwiki -o
+  \t-> Read the file "example.xml" and overwrite already existing "differrent.nwiki"''')
+
+def convert(xml_name, file_name):
     # Parses a xml-file with the given name
-    xmlTree = ET.parse(xml_name)
+    try:
+        xmlTree = ET.parse(xml_name)
+    except FileNotFoundError:
+        print(f'The file {xml_name} does not exist')
+        sys.exit()
+    except ET.ParseError:
+        print(f'The file {xml_name} somehow cannot be parsed')
+        sys.exit()
     root = xmlTree.getroot()
 
     # Creates a file containing nwiki-formatted data
@@ -42,14 +69,12 @@ def node_to_nwiki(node):
     if node.text is not None:
         nwiki_snippet = nwiki_snippets.get(node.tag)
         if nwiki_snippet is not None:
-            if is_version_old:
-                node_text = node.text.encode('utf-8')
-            else:
-                node_text = node.text
-            return nwiki_snippet.format(node_text=node_text)
+            return nwiki_snippet.format(node_text=node.text)
 
 # Check if version is below 3
-is_version_old = sys.version_info[0] < 3
+if sys.version_info[0] < 3:
+    print('Python-version below 3 detected. Try the script "voteConverter2.py"')
+    sys.exit()
 
 argv = sys.argv[1:]
 opts = []
@@ -78,8 +103,11 @@ if not opts:
             if args[1][-6:] == '.nwiki':
                 file_name = args[1]
             elif not allow_overwrite:
-                print('Second argument should be a .nwiki-filename or -o.\nWrite -? or --help for clarification.')
+                print('Second argument should be a .nwiki-filename, -o or --overwrite.\nWrite -? or --help for clarification.')
                 sys.exit()
-        convert(xml_name, file_name, allow_overwrite)
+        if os.path.isfile(file_name) and not allow_overwrite:
+            print(f'{file_name} already exists. Use -o or --overwrite to allow overwriting.\nWrite -? or --help for clarification.')
+        else:
+            convert(xml_name, file_name)
 elif opts[0][0] in ('-?', '--help'):
     show_help()
