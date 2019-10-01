@@ -2,6 +2,11 @@ import xml.etree.ElementTree as ET
 import sys, getopt
 import os.path
 
+# Check if version is below 3
+if sys.version_info[0] < 3:
+    print('Python-version below 3 detected. Try the script "voteConverter2.py"')
+    sys.exit()
+
 # How the text of certain nodes should be formatted
 nwiki_snippets = {
     'QuestionText': '={node_text}=',
@@ -47,10 +52,10 @@ def convert(xml_name, file_name):
     try:
         xmlTree = ET.parse(xml_name)
     except FileNotFoundError:
-        print(f'The file {xml_name} does not exist')
+        print('The file {xml_name} does not exist'.format(xml_name=xml_name))
         sys.exit()
     except ET.ParseError:
-        print(f'The file {xml_name} somehow cannot be parsed')
+        print('The file {xml_name} somehow cannot be parsed'.format(xml_name=xml_name))
         sys.exit()
     root = xmlTree.getroot()
 
@@ -70,11 +75,6 @@ def node_to_nwiki(node):
         nwiki_snippet = nwiki_snippets.get(node.tag)
         if nwiki_snippet is not None:
             return nwiki_snippet.format(node_text=node.text)
-
-# Check if version is below 3
-if sys.version_info[0] < 3:
-    print('Python-version below 3 detected. Try the script "voteConverter2.py"')
-    sys.exit()
 
 argv = sys.argv[1:]
 opts = []
@@ -102,11 +102,11 @@ if not opts:
         if len(args) > 1:
             if args[1][-6:] == '.nwiki':
                 file_name = args[1]
-            elif not allow_overwrite:
+            elif not (args[1] in ('-o', '--overwrite')):
                 print('Second argument should be a .nwiki-filename, -o or --overwrite.\nWrite -? or --help for clarification.')
                 sys.exit()
         if os.path.isfile(file_name) and not allow_overwrite:
-            print(f'{file_name} already exists. Use -o or --overwrite to allow overwriting.\nWrite -? or --help for clarification.')
+            print('{file_name} already exists. Use -o or --overwrite to allow overwriting.\nWrite -? or --help for clarification.'.format(file_name=file_name))
         else:
             convert(xml_name, file_name)
 elif opts[0][0] in ('-?', '--help'):
