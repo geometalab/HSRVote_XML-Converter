@@ -36,7 +36,7 @@ if is_version_old:
 else:
     xml_name = input('The name of your xml-file: ')
 xmlTree = ET.parse(xml_name)
-file_name = xml_name.split('.')[0] + '.txt'
+file_name = xml_name.split('.')[0] + '.nwiki'
 root = xmlTree.getroot()
 
 # Creates a file containing nwiki-formatted data
