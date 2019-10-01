@@ -22,6 +22,7 @@ nwiki_snippets = {
     'Solution': "'''Solution: {node_text}'''"
     }
 
+# Displays options
 def show_options():
     print('''Converts xml-files to nwiki-files
 
@@ -32,6 +33,7 @@ python voteConverter.py [-? | --help] for help
   output\t\tSpecifies the name of the nwiki-output-file.
   -o, --overwrite\tAllows a nwiki-file to get overwritten.''')
 
+# Displays some examples
 def show_help():
     print('''How to use voteConverter.py:
 
@@ -76,16 +78,19 @@ def node_to_nwiki(node):
         if nwiki_snippet is not None:
             return nwiki_snippet.format(node_text=node.text)
 
+# Read the given arguments from the console
 argv = sys.argv[1:]
 opts = []
 args = []
 
+# Specifies which opts are allowed
 try:
     opts, args = getopt.getopt(argv,'?',['help'])
 except getopt.GetoptError:
     print('Use arguments correctly.\nWrite -? or --help for clarification.')
     sys.exit(2)
 
+# Handles the given options and arguments
 if not opts:
     if not args:
         show_options()
