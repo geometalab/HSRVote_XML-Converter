@@ -7,6 +7,9 @@ if sys.version_info[0] < 3:
     print('Python-version below 3 detected. Try the script "voteConverter2.py"')
     sys.exit()
 
+xml = '.xml'
+nwiki = '.nwiki'
+
 # How the text of certain nodes should be formatted
 nwiki_snippets = {
     'QuestionText': '={node_text}=',
@@ -22,8 +25,8 @@ nwiki_snippets = {
     'Solution': "'''Solution: {node_text}'''"
     }
 
-# Displays options
-def show_options():
+# Displays options and some examples
+def show_help():
     print('''Converts xml-files to nwiki-files
 
 python voteConverter.py input [output] [-o | --overwrite] for converting
@@ -31,11 +34,9 @@ python voteConverter.py [-? | --help] for help
 
   input\t\t\tSpecifies the xml-file to convert.
   output\t\tSpecifies the name of the nwiki-output-file.
-  -o, --overwrite\tAllows a nwiki-file to get overwritten.''')
+  -o, --overwrite\tAllows a nwiki-file to get overwritten.
 
-# Displays some examples
-def show_help():
-    print('''How to use voteConverter.py:
+How to use voteConverter.py:
 
   python voteConverter.py example.xml
   \t-> Read the file "example.xml" and create "example.nwiki"
@@ -93,19 +94,19 @@ except getopt.GetoptError:
 # Handles the given options and arguments
 if not opts:
     if not args:
-        show_options()
+        show_help()
     elif len(args) > 3:
         print('Too many arguments.\nWrite -? or --help for clarification.')
     else:
         allow_overwrite = args[-1] in ('-o', '--overwrite')
-        if args[0][-4:] == '.xml':
+        if args[0][-4:] == xml:
             xml_name = args[0]
-            file_name = args[0].split('.')[0] + '.nwiki'
+            file_name = args[0].split('.')[0] + nwiki
         else:
             print('First argument should be a .xml-file\nWrite -? or --help for clarification.')
             sys.exit()
         if len(args) > 1:
-            if args[1][-6:] == '.nwiki':
+            if args[1][-6:] == nwiki:
                 file_name = args[1]
             elif not (args[1] in ('-o', '--overwrite')):
                 print('Second argument should be a .nwiki-filename, -o or --overwrite.\nWrite -? or --help for clarification.')
@@ -113,6 +114,10 @@ if not opts:
         if os.path.isfile(file_name) and not allow_overwrite:
             print('{file_name} already exists. Use -o or --overwrite to allow overwriting.\nWrite -? or --help for clarification.'.format(file_name=file_name))
         else:
-            convert(xml_name, file_name)
+            try:
+                convert(xml_name, file_name)
+                print('Conversion complete. New file {file_name} created'.format(file_name=file_name))
+            except:
+                print('Conversion failed.')
 elif opts[0][0] in ('-?', '--help'):
     show_help()
