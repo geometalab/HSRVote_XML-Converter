@@ -9,6 +9,7 @@ if sys.version_info[0] < 3:
 
 xml = '.xml'
 nwiki = '.nwiki'
+help = '\nWrite -? or --help for clarification.'
 
 # How the text of certain nodes should be formatted
 nwiki_snippets = {
@@ -55,10 +56,10 @@ def convert(xml_name, file_name):
     try:
         xmlTree = ET.parse(xml_name)
     except FileNotFoundError:
-        print('The file {xml_name} does not exist'.format(xml_name=xml_name))
+        print(f'The file {xml_name} does not exist')
         sys.exit()
     except ET.ParseError:
-        print('The file {xml_name} somehow cannot be parsed'.format(xml_name=xml_name))
+        print(f'The file {xml_name} somehow cannot be parsed')
         sys.exit()
     root = xmlTree.getroot()
 
@@ -88,7 +89,7 @@ args = []
 try:
     opts, args = getopt.getopt(argv,'?',['help'])
 except getopt.GetoptError:
-    print('Use arguments correctly.\nWrite -? or --help for clarification.')
+    print(f'Use arguments correctly.{help}')
     sys.exit(2)
 
 # Handles the given options and arguments
@@ -96,27 +97,27 @@ if not opts:
     if not args:
         show_help()
     elif len(args) > 3:
-        print('Too many arguments.\nWrite -? or --help for clarification.')
+        print(f'Too many arguments.{help}')
     else:
         allow_overwrite = args[-1] in ('-o', '--overwrite')
         if args[0][-4:] == xml:
             xml_name = args[0]
             file_name = args[0].split('.')[0] + nwiki
         else:
-            print('First argument should be a .xml-file\nWrite -? or --help for clarification.')
+            print(f'First argument should be a .xml-file{help}')
             sys.exit()
         if len(args) > 1:
             if args[1][-6:] == nwiki:
                 file_name = args[1]
             elif not (args[1] in ('-o', '--overwrite')):
-                print('Second argument should be a .nwiki-filename, -o or --overwrite.\nWrite -? or --help for clarification.')
+                print(f'Second argument should be a .nwiki-filename, -o or --overwrite.{help}')
                 sys.exit()
         if os.path.isfile(file_name) and not allow_overwrite:
-            print('{file_name} already exists. Use -o or --overwrite to allow overwriting.\nWrite -? or --help for clarification.'.format(file_name=file_name))
+            print(f'{file_name} already exists. Use -o or --overwrite to allow overwriting.{help}')
         else:
             try:
                 convert(xml_name, file_name)
-                print('Conversion complete. New file {file_name} created'.format(file_name=file_name))
+                print(f'Conversion complete. New file {file_name} created')
             except:
                 print('Conversion failed.')
 elif opts[0][0] in ('-?', '--help'):
