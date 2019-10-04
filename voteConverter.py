@@ -49,7 +49,7 @@ How to use voteConverter.py:
   \t-> Read the file "example.xml" and overwrite already existing "example.nwiki"
   
   python voteConverter.py example.xml different.nwiki -o
-  \t-> Read the file "example.xml" and overwrite already existing "differrent.nwiki"''')
+  \t-> Read the file "example.xml" and overwrite already existing "different.nwiki"''')
 
 def convert(xml_name, file_name):
     # Parses a xml-file with the given name
