@@ -72,11 +72,15 @@ def write_nwiki(root, file_name):
     with open(file_name, 'w') as w:
         assert root.tag == 'ArrayOfQuestion'
         for question in root:
-            assert question.tag == 'Question'
-            for node in question:
-                nwiki_snippet = node_to_nwiki(node)
-                if nwiki_snippet is not None:
-                    w.write(nwiki_snippet + '\n')
+            write_question(question, w)
+            
+def write_question(question, w):
+    'Writes the data from one question element'
+    assert question.tag == 'Question'
+    for node in question:
+        nwiki_snippet = node_to_nwiki(node)
+        if nwiki_snippet is not None:
+            w.write(nwiki_snippet + '\n')
 
 def node_to_nwiki(node):
     'Gets the text from the accepted nodes'
