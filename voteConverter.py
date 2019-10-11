@@ -1,11 +1,7 @@
 import xml.etree.ElementTree as ET
-import sys, getopt
-import os.path
-
-# Check if version is below 3
-if sys.version_info[0] < 3:
-    print('Python-version below 3 detected. Try the script "voteConverter2.py"')
-    sys.exit()
+import argparse
+from pathlib import Path
+import sys
 
 xml = '.xml'
 nwiki = '.nwiki'
@@ -26,18 +22,7 @@ nwiki_snippets = {
     'Solution': "'''Solution: {node_text}'''"
     }
 
-# Displays options and some examples
-def show_help():
-    print('''Converts xml-files to nwiki-files
-
-python voteConverter.py input [output] [-o | --overwrite] for converting
-python voteConverter.py [-? | --help] for help
-
-  input\t\t\tSpecifies the xml-file to convert.
-  output\t\tSpecifies the name of the nwiki-output-file.
-  -o, --overwrite\tAllows a nwiki-file to get overwritten.
-
-How to use voteConverter.py:
+examples = '''How to use voteConverter.py:
 
   python voteConverter.py example.xml
   \t-> Read the file "example.xml" and create "example.nwiki"
@@ -49,7 +34,27 @@ How to use voteConverter.py:
   \t-> Read the file "example.xml" and overwrite already existing "example.nwiki"
   
   python voteConverter.py example.xml different.nwiki -o
-  \t-> Read the file "example.xml" and overwrite already existing "different.nwiki"''')
+  \t-> Read the file "example.xml" and overwrite already existing "different.nwiki"'''
+
+def main():
+    args = parse_arguments()
+    input_file = Path(args.input)
+    output_file = input_file.parent / f'{input_file.stem}.nwiki' if args.output is None else Path(args.output)
+    if output_file.exists() and not args.overwrite:
+        print(f'{output_file} already exists. Use -o or --overwrite to allow overwriting.')
+        sys.exit(1)
+    try:
+        convert(input_file, output_file)
+        print(f'Conversion complete. New file {output_file} created')
+    except:
+        print('Conversion failed.')
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(description='Converts xml-files to nwiki-files', epilog=examples, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('input', type=str, help='the xml-file to convert')
+    parser.add_argument('output', type=str, nargs='?', help='the name of the nwiki-output-file')
+    parser.add_argument('-o', '--overwrite', action='store_true', help='if given, overwrite an existing nwiki-file if present')
+    return parser.parse_args()
 
 def convert(xml_name, file_name):
     # Parses a xml-file with the given name
@@ -80,45 +85,5 @@ def node_to_nwiki(node):
         if nwiki_snippet is not None:
             return nwiki_snippet.format(node_text=node.text)
 
-# Read the given arguments from the console
-argv = sys.argv[1:]
-opts = []
-args = []
-
-# Specifies which opts are allowed
-try:
-    opts, args = getopt.getopt(argv,'?',['help'])
-except getopt.GetoptError:
-    print(f'Use arguments correctly.{help}')
-    sys.exit(2)
-
-# Handles the given options and arguments
-if not opts:
-    if not args:
-        show_help()
-    elif len(args) > 3:
-        print(f'Too many arguments.{help}')
-    else:
-        allow_overwrite = args[-1] in ('-o', '--overwrite')
-        if args[0][-4:] == xml:
-            xml_name = args[0]
-            file_name = args[0].split('.')[0] + nwiki
-        else:
-            print(f'First argument should be a .xml-file{help}')
-            sys.exit()
-        if len(args) > 1:
-            if args[1][-6:] == nwiki:
-                file_name = args[1]
-            elif not (args[1] in ('-o', '--overwrite')):
-                print(f'Second argument should be a .nwiki-filename, -o or --overwrite.{help}')
-                sys.exit()
-        if os.path.isfile(file_name) and not allow_overwrite:
-            print(f'{file_name} already exists. Use -o or --overwrite to allow overwriting.{help}')
-        else:
-            try:
-                convert(xml_name, file_name)
-                print(f'Conversion complete. New file {file_name} created')
-            except:
-                print('Conversion failed.')
-elif opts[0][0] in ('-?', '--help'):
-    show_help()
+if __name__ == '__main__':
+    main()
