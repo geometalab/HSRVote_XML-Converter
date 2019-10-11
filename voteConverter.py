@@ -3,11 +3,7 @@ import argparse
 from pathlib import Path
 import sys
 
-xml = '.xml'
-nwiki = '.nwiki'
-help = '\nWrite -? or --help for clarification.'
-
-# How the text of certain nodes should be formatted
+# How the text of certain XML nodes should be formatted
 nwiki_snippets = {
     'QuestionText': '={node_text}=',
     'Answer1': '==1: {node_text}==',
@@ -50,14 +46,17 @@ def main():
         print('Conversion failed.')
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description='Converts xml-files to nwiki-files', epilog=examples, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('input', type=str, help='the xml-file to convert')
-    parser.add_argument('output', type=str, nargs='?', help='the name of the nwiki-output-file')
-    parser.add_argument('-o', '--overwrite', action='store_true', help='if given, overwrite an existing nwiki-file if present')
+    parser = argparse.ArgumentParser(description='Converts XML files to nwiki files', epilog=examples, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('input', type=str, help='the XML file to convert')
+    parser.add_argument('output', type=str, nargs='?', help='the name of the nwiki output file')
+    parser.add_argument('-o', '--overwrite', action='store_true', help='if given, overwrite an existing nwiki file if present')
     return parser.parse_args()
 
 def convert(xml_name, file_name):
-    # Parses a xml-file with the given name
+    root = parse_xml(xml_name)
+    write_nwiki(root, file_name)
+
+def parse_xml(xml_name):                
     try:
         xmlTree = ET.parse(xml_name)
     except FileNotFoundError:
@@ -66,9 +65,10 @@ def convert(xml_name, file_name):
     except ET.ParseError:
         print(f'The file {xml_name} somehow cannot be parsed')
         sys.exit()
-    root = xmlTree.getroot()
+    return xmlTree.getroot()
 
-    # Creates a file containing nwiki-formatted data
+def write_nwiki(root, file_name):
+    'Creates a file containing nwiki-formatted data'
     with open(file_name, 'w') as w:
         assert root.tag == 'ArrayOfQuestion'
         for question in root:
@@ -78,12 +78,14 @@ def convert(xml_name, file_name):
                 if nwiki_snippet is not None:
                     w.write(nwiki_snippet + '\n')
 
-# Gets the text from the accepted nodes
 def node_to_nwiki(node):
-    if node.text is not None:
-        nwiki_snippet = nwiki_snippets.get(node.tag)
-        if nwiki_snippet is not None:
-            return nwiki_snippet.format(node_text=node.text)
+    'Gets the text from the accepted nodes'
+    if node.text is None:
+        return None
+    nwiki_snippet = nwiki_snippets.get(node.tag)
+    if nwiki_snippet is None:
+        return None
+    return nwiki_snippet.format(node_text=node.text)
 
 if __name__ == '__main__':
     main()
