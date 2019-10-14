@@ -52,24 +52,24 @@ def parse_arguments():
     parser.add_argument('-o', '--overwrite', action='store_true', help='if given, overwrite an existing nwiki file if present')
     return parser.parse_args()
 
-def convert(xml_name, file_name):
-    root = parse_xml(xml_name)
-    write_nwiki(root, file_name)
+def convert(input_file, output_file):
+    root = parse_xml(input_file)
+    write_nwiki(root, output_file)
 
-def parse_xml(xml_name):                
+def parse_xml(input_file):                
     try:
-        xmlTree = ET.parse(xml_name)
+        xmlTree = ET.parse(input_file)
     except FileNotFoundError:
-        print(f'The file {xml_name} does not exist')
+        print(f'The file {input_file} does not exist')
         sys.exit()
     except ET.ParseError:
-        print(f'The file {xml_name} somehow cannot be parsed')
+        print(f'The file {input_file} somehow cannot be parsed')
         sys.exit()
     return xmlTree.getroot()
 
-def write_nwiki(root, file_name):
+def write_nwiki(root, output_file):
     'Creates a file containing nwiki-formatted data'
-    with open(file_name, 'w') as w:
+    with open(output_file, 'w') as w:
         assert root.tag == 'ArrayOfQuestion'
         for question in root:
             write_question(question, w)
